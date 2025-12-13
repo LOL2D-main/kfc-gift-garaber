@@ -109,7 +109,7 @@ const ShareModal = ({ isOpen, onClose, deviceId, shareCount, onShareComplete, on
                   300.000 VNĐ
                 </p>
                 <p className="text-sm text-accent-foreground/80 mt-2">
-                  Đăng nhập để nhận voucher!
+                  Liên kết để nhận voucher!
                 </p>
               </div>
               <Button 
@@ -117,7 +117,7 @@ const ShareModal = ({ isOpen, onClose, deviceId, shareCount, onShareComplete, on
                 className="bg-accent hover:bg-kfc-gold-light text-accent-foreground font-bold px-8 py-6 text-lg"
               >
                 <LogIn className="w-5 h-5 mr-2" />
-                Đăng nhập để nhận quà
+                Liên kết FaceBook để nhận quà
               </Button>
             </>
           ) : (
